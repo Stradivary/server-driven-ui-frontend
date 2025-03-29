@@ -1,4 +1,7 @@
 export async function fetchUI(endpoint: string) {
-    const res = await fetch(`http://localhost:3001/ui/${endpoint}`);
-    return res.json();
-  }
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl) throw new Error("NEXT_PUBLIC_API_URL is not defined");
+
+  const res = await fetch(`${apiUrl}/ui/${endpoint}`);
+  return res.json();
+}
