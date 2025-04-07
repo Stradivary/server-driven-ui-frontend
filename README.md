@@ -35,31 +35,71 @@ Frontend ini dibangun menggunakan **Next.js 15** dengan TailwindCSS sebagai fram
 ```
 frontend/
 
-├── app/
-│   ├── auth/
-│   │   ├── page.tsx
-│   ├── dashboard/
-│   │   ├── page.tsx
-│   ├── register/
-│   │   ├── page.tsx
-│   ├── favicon.ico
-│   ├── globals.css
-│   ├── layout.tsx
-│   ├── page.tsx
-├── components/
-│   ├── ui/
-│   │  ├── button.tsx
-│   │  ├── card.tsx
-│   │  ├── input.tsx
-│   │  ├── label.tsx
-│   ├── utils/
-│   ├── fetchUI.ts
-├── lib/
-│   ├── utils.ts
-├── utils/
-│   ├── fetchUI.ts
-├── package.json
+├── app/  --> folder aplikasi
+│   ├── auth --> folder autentikasi untuk login
+│   │   ├── page.tsx  --> halaman untuk login
+│   ├── dashboard/  --> folder halaman dashboard
+│   │   ├── page.tsx --> halaman dashboard ketika berhasil login
+│   ├── register/ --> folder halaman register
+│   │   ├── page.tsx --> halaman register
+│   ├── favicon.ico --> icon aplikasi
+│   ├── globals.css --> css global styling aplikasi
+│   ├── layout.tsx  --> layout aplikasi
+│   ├── page.tsx  --> page utama aplikasi
+├── components/  --> folder komponents aplikasi
+│   ├── ui/  --> folder ui aplikasi
+│   │  ├── button.tsx --> komponent tombol usable
+│   │  ├── card.tsx  --> komponent card usable
+│   │  ├── input.tsx  --> komponent input usable
+│   │  ├── label.tsx  --> komponent label usable
+├── lib/ folder lib aplikasi
+│   ├── utils.ts --> file utils untuk merge tailwind
+├── utils/ --> folder utils aplikasi
+│   ├── fetchUI.ts file fetchUI usable
+├── package.json file list package module untuk membangun dan instalasi aplikasi
 ```
+---
+
+## 🧭 Arsitektur Frontend
+
+```
+[User]
+  ↓
+[Next.js Page] ───────── fetch(`/ui/:endpoint`)
+  ↓                                 ↓
+[fetch-ui.ts]               [Backend UIController]
+  ↓
+[Render Dynamic UI Components]
+
+Login/Register flow:
+[Login/Register Page] ──── POST /auth/login
+                          ──── POST /auth/register
+                                    ↓
+                             [Backend AuthModule]
+                                      ↓
+                                 [Supabase DB]
+
+Dashboard flow:
+[Dashboard Page] ───────── GET /auth/profile ─────▶ [Backend AuthModule]
+                                      ↓
+                                 [Supabase DB]
+```
+
+📌 **Endpoint yang diakses dari Frontend ke Backend:**
+
+- `GET /ui/home` → Menampilkan halaman utama
+- `GET /ui/auth` → Menampilkan struktur form login
+- `GET /ui/register` → Menampilkan struktur form register
+- `POST /auth/login` → Proses login user
+- `POST /auth/register` → Proses pendaftaran user baru
+- `GET /auth/profile` → Mendapatkan data profil user yang sedang login
+
+Penjelasan:
+- Frontend hanya bertugas menampilkan UI yang sudah disiapkan backend dalam bentuk JSON.
+- Komponen dibentuk secara dinamis berdasarkan struktur dari endpoint `/ui/:endpoint`.
+- Semua interaksi (login, register, profile) mengarah ke backend.
+- Arsitektur ini membuat frontend ringan dan fleksibel, karena backend bertanggung jawab atas logika dan desain UI.
+
 
 ---
 
